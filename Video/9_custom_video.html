@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+          position: relative;
+          width:640px;
+          margin: 0 auto;
+          border:2px solid #900;
+        }
+        #control-buttons{
+          margin: 20px 0;
+        }
+        #control-buttons button{
+          display: inline-block;
+          line-height: 30px;
+          height: 30px;
+          background-color: #900;
+          color:#fff;
+          border:none;
+          outline: none;
+          font-size:12px;
+          font-family: 'Microsoft Yahei';
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        #ad{
+            position:absolute;
+            left: 50%;
+            top:50%;
+            width: 400px;
+            height: 300px;
+            margin-left: -200px;
+            margin-top: -180px;
+        }
+        #del{
+            display: block;
+            position: absolute;
+            border-radius: 50%;
+            background-color:#fff;
+            border: 0;
+            top:5px;
+            left: 360px;;
+        }
+      </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="ad"><img src="ad/0D0100005E254C951831383513533435.jpg" alt="">
+        <div><button id="del">x</button></div></div>
+        <video id="video" src="video/video.mp4" width="640" height="360" poster="video/poster.jpg"></video>
+        <div id="control-buttons">
+            <span id='currentTime'>00</span>/
+            <span id='duration'>00</span>
+            <button onclick="playOrPause()">播放/暂停</button>
+            <button onclick="volumeInc()">增加音量</button>
+            <button onclick="volumeDec()">减少音量</button>
+            <button onclick="changePlaybackRate('0.5')">0.5倍</button>
+            <button onclick="changePlaybackRate('1')">1倍</button>
+            <button onclick="changePlaybackRate('1.5')">1.5倍</button>
+            <button onclick="changePlaybackRate('2')">2倍</button>
+        </div>
+    </div>
+    <script>
+        function playOrPause() {
+            let videoEle = document.getElementById('video');
+            if (videoEle.paused || videoEle.ended) {
+                videoEle.play()
+            } else {
+                videoEle.pause()
+            }
+        }
+        function volumeInc() {
+            let videoEle = document.getElementById('video')
+            videoEle.volume  =Math.min(1,videoEle.volume+0.1);
+            console.log(videoEle.volume)
+        }
+        function volumeDec() {
+            let videoEle = document.getElementById('video')
+            videoEle.volume =Math.max(0,videoEle.volume-0.1);
+            console.log(videoEle.volume)
+        }
+        // 调整播放速率
+        function changePlaybackRate(value){
+            value=parseFloat(value)
+            let videoEle=document.getElementById('video')
+            videoEle.playbackRate=value
+        }
+        let videoEle=document.getElementById('video')
+        videoEle.onloadedmetadata=function(){
+            let currentTime=parseInt(videoEle.currentTime)
+            let duration=parseInt(videoEle.duration)
+            document.getElementById('currentTime').innerText=currentTime;
+            document.getElementById('duration').innerText=duration
+        }
+        // 在媒体播放过程实时获取当前的播放时间
+        videoEle.ontimeupdate=function(){
+            let currentTime=parseInt(videoEle.currentTime);
+            document.getElementById('currentTime').innerText=currentTime
+        }
+        // 媒体播放时隐藏广告位
+        videoEle.onplay=function(){
+            document.getElementById('ad').style.display='none';
+        }
+        // 媒体暂停时显示广告位
+        videoEle.onpause=function(){
+            let imgEle=document.getElementById('ad').getElementsByTagName('img')[0]
+            imgEle.src='ad/'+images[Math.floor(Math.random() * images.length)]
+            document.getElementById('ad').style.display='block';
+        }
+
+        // 在媒体播放完毕时自动提示播放下一集
+        videoEle.onended=function(){
+            console.log('系统将在5秒后自动播放下一集')
+        }
+
+        let images=[
+        '0D0100005E0DB3591241923143384738.jpg','0D0100005E2EF493395059357930375A.jpg','0D0100005E4DDCB31126293290574D55.jpg','0D0100005E40CB833950593579383235.jpg','0D0100005E254C951831383513533435.jpg','0D0100005E4149B13950593579363944.jpg','0D0100005E42288F9115223570333345.jpg','0D0100005E588109395059360246315A.jpg'
+        ];
+
+    </script>
+</body>
+
+</html>
